@@ -13,7 +13,16 @@ env:
 jobs:
   deployar:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        servicios: ["service1/functionA"]
     steps:
+      - name: Extract folder and file from path
+        run: |
+          FULL=${{ matrix.servicios }} && SERVICIO=$(dirname "$FULL") && FUNCION=$(basename "$FULL")
+          echo "SERVICIO: $SERVICIO"
+          echo "FUNCION: $FUNCION"
+
       - name: ~ Checkout code ~
         id: CheckoutCode
         uses: actions/checkout/@v4
@@ -26,8 +35,8 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Build functionA
-        run: yarn workspace functionA run build && yarn workspace functionA run package
+      - name: Build ${{ matrix.servicios }}
+        run: yarn workspace $FUNCION run build && yarn workspace $FUNCION run package
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
@@ -39,18 +48,18 @@ jobs:
         run: |
           echo "aws_region = \"${{ env.AWS_DEFAULT_REGION }}\"" > terraform.tfvars
           echo "environment = \"${{ env.DEPLOYMENT_ENV }}\"" >> terraform.tfvars
-        working-directory: ./infrastructure/services/service1/functionA
+        working-directory: ./infrastructure/services/$SERVICIO/$FUNCION
 
       - name: Generate backend.conf file
         id: GenerateBackendConf
         run: |
           echo "bucket = \"${{ env.TF_STATE_BUCKET }}\"" > backend.conf
-          echo "key = \"service1/functionA/terraform.tfstate\"" >> backend.conf
+          echo "key = \"$SERVICIO/$FUNCION/terraform.tfstate\"" >> backend.conf
           echo "region = \"${{ env.AWS_DEFAULT_REGION }}\"" >> backend.conf
-        working-directory: ./infrastructure/services/service1/functionA
+        working-directory: ./infrastructure/services/$SERVICIO/$FUNCION
       
-      - name: Deploy service1
+      - name: Deploy ${{ matrix.servicios }}
         run: |
           terraform init -backend-config=backend.conf
           terraform apply -var-file="terraform.tfvars" -auto-approve -input=false
-        working-directory: ./infrastructure/services/service1/functionA
+        working-directory: ./infrastructure/services/$SERVICIO/$FUNCION

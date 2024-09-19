@@ -37,10 +37,10 @@ jobs:
         run: |
           echo "aws_region = \"${{ env.AWS_DEFAULT_REGION }}\"" > terraform.tfvars
           echo "environment = \"${{ env.DEPLOYMENT_ENV }}\"" >> terraform.tfvars
-        working-directory: ./infrastructure/service1
+        working-directory: ./infrastructure/services/service1/functionA
       
       - name: Deploy service1
         run: |
           terraform init
           terraform apply -var-file="terraform.tfvars" -auto-approve -input=false
-        working-directory: ./infrastructure/service1
+        working-directory: ./infrastructure/services/service1/functionA

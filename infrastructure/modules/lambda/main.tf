@@ -17,7 +17,7 @@ resource "aws_lambda_function" "lambda_service" {
 
   environment {
     variables = {
-      ENV = "production"
+      ENV = "${var.environment}"
     }
   }
 }

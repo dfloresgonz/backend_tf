@@ -36,7 +36,7 @@ jobs:
         run: yarn install
 
       - name: Build ${{ matrix.servicios }}
-        run: yarn workspace $FUNCION run build && yarn workspace $FUNCION run package
+        run: yarn workspace "$FUNCION" run build && yarn workspace "$FUNCION" run package
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2

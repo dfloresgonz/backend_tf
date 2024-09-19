@@ -36,6 +36,7 @@ jobs:
       - name: Generate .tfvars file
         run: |
           echo "aws_region = \"${{ env.AWS_DEFAULT_REGION }}\"" > terraform.tfvars
+        working-directory: ./infrastructure/service1
       
       - name: Deploy service1
         run: |

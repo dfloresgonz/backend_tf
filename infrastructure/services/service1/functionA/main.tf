@@ -6,11 +6,7 @@ terraform {
     }
   }
 
-  backend "s3" {
-    bucket = "my-tf-state-bucket"
-    key    = "service1/functionA/terraform.tfstate"
-    region = var.aws_region
-  }
+  backend "s3" {}
 
   required_version = ">= 1.2.0"
 }

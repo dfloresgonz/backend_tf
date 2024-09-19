@@ -14,9 +14,10 @@ module.exports.main = async (event) => {
   console.log(`Response from external API: ${JSON.stringify(data)}`);
 
   const ENV = process.env.ENV;
+  console.log(`ENV: ${ENV}`);
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ message: `Hello from function A! - ${_uuid} - name: ${name}`, data, env: ENV }),
+    body: JSON.stringify({ message: `holaa from function A! - ${_uuid} - name: ${name}`, data, env: ENV }),
   };
 };

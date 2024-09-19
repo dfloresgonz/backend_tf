@@ -22,6 +22,8 @@ jobs:
           FULL=${{ matrix.servicios }} && SERVICIO=$(dirname "$FULL") && FUNCION=$(basename "$FULL")
           echo "SERVICIO: $SERVICIO"
           echo "FUNCION: $FUNCION"
+          echo "SERVICIO=$SERVICIO" >> $GITHUB_ENV
+          echo "FUNCION=$FUNCION" >> $GITHUB_ENV
 
       - name: ~ Checkout code ~
         id: CheckoutCode
@@ -36,7 +38,7 @@ jobs:
         run: yarn install
 
       - name: Build ${{ matrix.servicios }}
-        run: yarn workspace "$FUNCION" run build && yarn workspace "$FUNCION" run package
+        run: yarn workspace $FUNCION run build && yarn workspace $FUNCION run package
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2

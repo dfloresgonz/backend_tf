@@ -10,9 +10,9 @@ terraform {
 }
 
 provider "aws" {
-  region     = var.aws_region
-  access_key = var.access_key
-  secret_key = var.secret_key
+  region = var.aws_region
+  # access_key = var.access_key
+  # secret_key = var.secret_key
 }
 
 locals {
@@ -25,8 +25,8 @@ module "functionA" {
   handler_path = "bundle.main"
   filename     = "../../services/service1/functionA/lambda.zip"
   aws_region   = var.aws_region
-  access_key   = var.access_key
-  secret_key   = var.secret_key
+  # access_key   = var.access_key
+  # secret_key   = var.secret_key
 }
 
 output "functionA_arn" {

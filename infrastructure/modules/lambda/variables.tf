@@ -3,17 +3,17 @@ variable "aws_region" {
   type        = string
 }
 
-variable "access_key" {
-  description = "La clave de acceso de AWS"
-  type        = string
-  sensitive   = true
-}
+# variable "access_key" {
+#   description = "La clave de acceso de AWS"
+#   type        = string
+#   sensitive   = true
+# }
 
-variable "secret_key" {
-  description = "La clave secreta de AWS"
-  type        = string
-  sensitive   = true
-}
+# variable "secret_key" {
+#   description = "La clave secreta de AWS"
+#   type        = string
+#   sensitive   = true
+# }
 
 variable "base_name" {
   description = "Nombre base para la función Lambda y otros recursos"

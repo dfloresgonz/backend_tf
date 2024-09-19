@@ -24,6 +24,7 @@ jobs:
           echo "FUNCION: $FUNCION"
           echo "SERVICIO=$SERVICIO" >> $GITHUB_ENV
           echo "FUNCION=$FUNCION" >> $GITHUB_ENV
+          echo "FULLPATH=infrastructure/services/$SERVICIO/$FUNCION" >> $GITHUB_ENV
 
       - name: ~ Checkout code ~
         id: CheckoutCode
@@ -50,7 +51,7 @@ jobs:
         run: |
           echo "aws_region = \"${{ env.AWS_DEFAULT_REGION }}\"" > terraform.tfvars
           echo "environment = \"${{ env.DEPLOYMENT_ENV }}\"" >> terraform.tfvars
-        working-directory: infrastructure/services/${{ env.SERVICIO }}/${{ env.FUNCION }}
+        working-directory: ${{ env.FULLPATH }}
 
       - name: Generate backend.conf file
         id: GenerateBackendConf
@@ -58,10 +59,10 @@ jobs:
           echo "bucket = \"${{ env.TF_STATE_BUCKET }}\"" > backend.conf
           echo "key = \"$SERVICIO/$FUNCION/terraform.tfstate\"" >> backend.conf
           echo "region = \"${{ env.AWS_DEFAULT_REGION }}\"" >> backend.conf
-        working-directory: infrastructure/services/${{ env.SERVICIO }}/${{ env.FUNCION }}
+        working-directory: ${{ env.FULLPATH }}
       
       - name: Deploy ${{ matrix.servicios }}
         run: |
           terraform init -backend-config=backend.conf
           terraform apply -var-file="terraform.tfvars" -auto-approve -input=false
-        working-directory: infrastructure/services/${{ env.SERVICIO }}/${{ env.FUNCION }}
+        working-directory: ${{ env.FULLPATH }}

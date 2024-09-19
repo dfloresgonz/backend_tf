@@ -20,7 +20,7 @@ locals {
   function_name = "functionA"
 }
 
-module "function" {
+module "functionA" {
   source       = "../../../modules/lambda"
   base_name    = "${local.service_name}-${local.function_name}"
   handler_path = "bundle.main"

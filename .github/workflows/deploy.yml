@@ -52,7 +52,7 @@ jobs:
         run: |
           echo "aws_region = \"${{ env.AWS_DEFAULT_REGION }}\"" > terraform.tfvars
           echo "ENVIROMENT = \"${{ env.DEPLOYMENT_ENV }}\"" >> terraform.tfvars
-          echo "USUARIO_BD = \"${{ env.DEPLOYMENT_ENV }}\"" >> terraform.tfvars
+          echo "USUARIO_BD = \"${{ env.USUARIO_BD }}\"" >> terraform.tfvars
         working-directory: ${{ env.FULLPATH }}
 
       - name: Generate backend.conf file

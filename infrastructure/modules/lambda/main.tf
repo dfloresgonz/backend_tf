@@ -16,9 +16,10 @@ resource "aws_lambda_function" "lambda_service" {
   source_code_hash = filebase64sha256("${var.filename}")
 
   environment {
-    variables = {
-      ENV = "${var.environment}"
-    }
+    variables = var.variables
+    # variables = {
+    #   ENV = "${var.environment}"
+    # }
   }
 }
 

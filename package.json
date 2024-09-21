@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,10 @@
     ]
   },
   "devDependencies": {
-    "esbuild": "^0.23.1"
+    "esbuild": "^0.23.1",
+    "express": "^4.21.0",
+    "glob": "^11.0.0",
+    "hcl-parser": "^0.1.1",
+    "nodemon": "^3.1.7"
   }
 }

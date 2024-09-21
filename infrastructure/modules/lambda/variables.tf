@@ -18,7 +18,12 @@ variable "filename" {
   type        = string
 }
 
-variable "environment" {
+variable "variables" {
   description = "Variables de entorno para la función Lambda"
-  type        = string
+  type        = map(string)
 }
+
+# variable "environment" {
+#   description = "Variables de entorno para la función Lambda"
+#   type        = string
+# }

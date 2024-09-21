@@ -14,3 +14,13 @@ variable "secret_key" {
   type        = string
   sensitive   = true
 }
+
+variable "ENVIRONMENT" {
+  description = "Variables de entorno para la función Lambda"
+  type        = string
+}
+
+variable "USUARIO_BD" {
+  description = "Usuario de la base de datos"
+  type        = string
+}

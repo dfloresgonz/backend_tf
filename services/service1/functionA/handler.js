@@ -3,6 +3,10 @@ const uuid = require('uuid');
 const calcular = require('./services/servicio')
 const axios = require('axios');
 
+module.exports.config = {
+  method: 'POST', // Define el método HTTP que esta función admite
+};
+
 module.exports.main = async (event) => {
   const _uuid = uuid.v4();
   const name = calcular.getName();
@@ -13,8 +17,10 @@ module.exports.main = async (event) => {
   const data = response.data;
   console.log(`Response from external API: ${JSON.stringify(data)}`);
 
-  const ENV = process.env.ENV;
-  console.log(`ENV: ${ENV}`);
+  const ENVIROMENT = process.env.ENVIROMENT;
+  const USUARIO_BD = process.env.USUARIO_BD;
+  console.log(`ENVIROMENT: ${ENVIROMENT}`);
+  console.log(`USUARIO_BD: ${USUARIO_BD}`);
 
   return {
     statusCode: 200,

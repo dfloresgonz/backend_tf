@@ -3,7 +3,12 @@ variable "aws_region" {
   type        = string
 }
 
-variable "environment" {
+variable "ENVIROMENT" {
   description = "Variables de entorno para la función Lambda"
+  type        = string
+}
+
+variable "USUARIO_BD" {
+  description = "Usuario de la base de datos"
   type        = string
 }

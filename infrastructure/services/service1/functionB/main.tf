@@ -17,10 +17,10 @@ provider "aws" {
 
 locals {
   service_name  = "service1"
-  function_name = "functionA"
+  function_name = "functionB"
 }
 
-module "functionA" {
+module "functionB" {
   source       = "../../../modules/lambda"
   base_name    = "${local.service_name}-${local.function_name}"
   handler_path = "bundle.main"

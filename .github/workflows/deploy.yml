@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        servicios: ["service1/functionA"]
+        servicios: ["service1/functionA", "service2/functionB"]
     steps:
       - name: Extract folder and file from path
         run: |

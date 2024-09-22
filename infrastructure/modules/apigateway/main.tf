@@ -33,6 +33,11 @@ resource "aws_route53_record" "cert_validation" {
   records         = [each.value.value] # Usa el valor de validación obtenido
   ttl             = 300
   allow_overwrite = true
+  alias {
+    evaluate_target_health = true
+    name                   = aws_api_gateway_domain_name.custom_domain.regional_domain_name
+    zone_id                = aws_api_gateway_domain_name.custom_domain.regional_zone_id
+  }
 }
 
 resource "aws_acm_certificate_validation" "cert_validation" {
@@ -43,6 +48,7 @@ resource "aws_acm_certificate_validation" "cert_validation" {
 resource "aws_api_gateway_domain_name" "custom_domain" {
   domain_name     = "api.decepticons.dev"
   certificate_arn = aws_acm_certificate.cert.arn
+
   endpoint_configuration {
     types = ["REGIONAL"]
   }

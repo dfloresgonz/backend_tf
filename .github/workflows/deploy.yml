@@ -9,7 +9,6 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
   AWS_DEFAULT_REGION: ${{ vars.AWS_REGION }}
   USUARIO_BD: ${{ vars.USUARIO_BD }}
-  HOST_BD: ${{ vars.USUARIO_BD }}
   TF_STATE_BUCKET: prueba-state-bucket
 
 jobs:
@@ -54,7 +53,6 @@ jobs:
           echo "aws_region = \"${{ env.AWS_DEFAULT_REGION }}\"" > terraform.tfvars
           echo "ENVIROMENT = \"${{ env.DEPLOYMENT_ENV }}\"" >> terraform.tfvars
           echo "USUARIO_BD = \"${{ env.USUARIO_BD }}\"" >> terraform.tfvars
-          echo "HOST_BD = \"${{ env.HOST_BD }}\"" >> terraform.tfvars
         working-directory: ${{ env.FULLPATH }}
 
       - name: Generate backend.conf file

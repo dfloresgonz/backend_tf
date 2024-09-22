@@ -65,7 +65,7 @@ resource "aws_api_gateway_base_path_mapping" "mapping2" {
   domain_name = module.api_gateway.custom_domain_name
   api_id      = module.api_gateway.my_api_id
   stage_name  = aws_api_gateway_deployment.api_stage.stage_name
-  base_path   = "v1/service1"
+  base_path   = local.service_name
 }
 
 resource "aws_api_gateway_deployment" "api_stage" {

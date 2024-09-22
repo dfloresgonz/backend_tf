@@ -68,3 +68,7 @@ resource "aws_iam_role_policy_attachment" "lambda_exec_policy" {
 output "lambda_function_arn" {
   value = aws_lambda_function.lambda_service.arn
 }
+
+output "name" {
+  value = aws_lambda_function.lambda_service.function_name
+}

@@ -33,11 +33,9 @@ module "functionA" {
 }
 
 module "api_gateway" {
-  source = "../../../modules/apigateway"
-  # aws_region = var.aws_region
+  source    = "../../../modules/apigateway"
   api_name  = "my_api"
   path_part = "service1"
-  # integrations = local.combined_integrations
 }
 
 resource "aws_api_gateway_resource" "resource1" {
@@ -68,10 +66,6 @@ resource "aws_api_gateway_base_path_mapping" "mapping1" {
   stage_name  = aws_api_gateway_deployment.api_stage.stage_name
   base_path   = local.service_name
 }
-
-# output "integration1_id" {
-#   value = aws_api_gateway_integration.integration1.id
-# }
 
 resource "aws_api_gateway_deployment" "api_stage" {
   rest_api_id = module.api_gateway.my_api_id

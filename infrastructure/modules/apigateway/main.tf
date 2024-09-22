@@ -54,8 +54,12 @@ resource "null_resource" "check_domain" {
   }
 }
 
+data "local_file" "domain_check" {
+  filename = "${path.module}/domain_check.txt"
+}
+
 locals {
-  create_domain = "${null_resource.check_domain.provisioner[0].output}" == "not found" ? 1 : 0
+  create_domain = trim(data.local_file.domain_check.content) == "not found" ? 1 : 0
 }
 
 # data "aws_api_gateway_domain_name" "existing_domain" {

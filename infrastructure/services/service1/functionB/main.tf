@@ -35,8 +35,9 @@ module "functionB" {
 module "api_gateway" {
   source = "../../../modules/apigateway"
   # aws_region = var.aws_region
-  api_name  = "my_api"
-  path_part = "service1"
+  api_name   = "my_api"
+  path_part  = "service1"
+  aws_region = var.aws_region
 }
 
 resource "aws_api_gateway_resource" "resource2" {

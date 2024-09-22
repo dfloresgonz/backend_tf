@@ -40,16 +40,29 @@ resource "aws_acm_certificate_validation" "cert_validation" {
   validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
 }
 
-data "aws_api_gateway_domain_name" "existing_domain" {
-  domain_name = "api.decepticons.dev"
-}
-locals {
-  domain_exists = try(data.aws_api_gateway_domain_name.existing_domain.id, "")
+resource "null_resource" "check_domain" {
+  provisioner "local-exec" {
+    command = "aws apigateway get-domain-name --domain-name api.decepticons.dev --region ${var.aws_region} || echo 'not found'"
+    environment = {
+      AWS_DEFAULT_REGION = var.aws_region
+    }
+  }
 }
 
 locals {
-  create_domain = local.domain_exists == "" ? 1 : 0
+  create_domain = null_resource.check_domain.triggers["aws_apigateway_domain_name"] == "not found" ? 1 : 0
 }
+
+# data "aws_api_gateway_domain_name" "existing_domain" {
+#   domain_name = "api.decepticons.dev"
+# }
+# locals {
+#   domain_exists = try(data.aws_api_gateway_domain_name.existing_domain.id, "")
+# }
+
+# locals {
+#   create_domain = local.domain_exists == "" ? 1 : 0
+# }
 
 resource "aws_api_gateway_domain_name" "custom_domain" {
   count = local.create_domain

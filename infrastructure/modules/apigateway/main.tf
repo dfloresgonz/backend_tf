@@ -59,7 +59,7 @@ data "local_file" "domain_check" {
 }
 
 locals {
-  create_domain = trim(data.local_file.domain_check.content) == "not found" ? 1 : 0
+  create_domain = trim(data.local_file.domain_check.content, "\n") == "not found" ? 1 : 0
 }
 
 # data "aws_api_gateway_domain_name" "existing_domain" {

@@ -62,7 +62,7 @@ resource "aws_route53_record" "api_gateway_domain" {
   name    = "api.decepticons.dev"
   type    = "CNAME"
   ttl     = 300
-  records = [aws_api_gateway_domain_name.custom_domain.regional_domain_name]
+  records = [aws_api_gateway_domain_name.custom_domain[0].regional_domain_name]
 }
 
 output "my_api_id" {

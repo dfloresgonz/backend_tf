@@ -68,3 +68,11 @@ resource "aws_api_gateway_base_path_mapping" "mapping2" {
   stage_name  = aws_api_gateway_deployment.api_stage.stage_name
   base_path   = "v1/service1"
 }
+
+module "common" {
+  source      = "../../../modules/common"
+  rest_api_id = module.api_gateway.my_api.id
+  integration_dependencies = [
+    aws_api_gateway_integration.integration2,
+  ]
+}

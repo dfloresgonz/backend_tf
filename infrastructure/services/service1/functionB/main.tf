@@ -77,6 +77,6 @@ resource "aws_api_gateway_deployment" "api_stage" {
   rest_api_id = module.api_gateway.my_api_id
   stage_name  = "test"
   depends_on = [
-    aws_api_gateway_integration.integration2.id
+    aws_api_gateway_integration.integration2
   ]
 }

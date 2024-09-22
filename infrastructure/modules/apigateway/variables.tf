@@ -14,10 +14,10 @@ variable "path_part" {
   description = "Path para la API Gateway"
 }
 
-variable "integrations" {
-  type        = list(any)
-  description = "Lista de integraciones para el despliegue"
-}
+# variable "integrations" {
+#   type        = list(any)
+#   description = "Lista de integraciones para el despliegue"
+# }
 
 # variable "http_method" {
 #   type        = string

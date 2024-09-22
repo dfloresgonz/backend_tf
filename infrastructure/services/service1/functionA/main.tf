@@ -32,16 +32,16 @@ module "functionA" {
   }
 }
 
-locals {
-  combined_integrations = merge(module.api_gateway.integrations, { "integration1" = aws_api_gateway_integration.integration1 })
-}
+# locals {
+#   combined_integrations = merge(module.api_gateway.integrations, { "integration1" = aws_api_gateway_integration.integration1 })
+# }
 
 module "api_gateway" {
   source = "../../../modules/apigateway"
   # aws_region = var.aws_region
-  api_name     = "my_api"
-  path_part    = "service1"
-  integrations = local.combined_integrations
+  api_name  = "my_api"
+  path_part = "service1"
+  # integrations = local.combined_integrations
 }
 
 resource "aws_api_gateway_resource" "resource1" {
@@ -74,14 +74,3 @@ resource "aws_api_gateway_base_path_mapping" "mapping1" {
   stage_name  = aws_api_gateway_deployment.api_stage.stage_name
   base_path   = "v1/service1"
 }
-
-# resource "aws_api_gateway_deployment" "api_stage" {
-#   rest_api_id = module.api_gateway.my_api.id
-#   stage_name  = "test"
-#   depends_on  = [aws_api_gateway_integration.integration1, aws_api_gateway_integration.integration2]
-# }
-
-
-# output "functionA_arn" {
-#   value = module.functionA.lambda_function_arn
-# }

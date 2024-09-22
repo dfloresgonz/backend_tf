@@ -10,5 +10,8 @@ resource "aws_api_gateway_domain_name" "custom_domain" {
 resource "aws_api_gateway_deployment" "api_stage" {
   rest_api_id = aws_api_gateway_rest_api.my_api.id
   stage_name  = "test"
-  depends_on  = var.integrations
+  depends_on = [
+    aws_api_gateway_integration.integration1,
+    aws_api_gateway_integration.integration2,
+  ]
 }

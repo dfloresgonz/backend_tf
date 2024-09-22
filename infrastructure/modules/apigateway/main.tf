@@ -46,11 +46,16 @@ resource "null_resource" "check_domain" {
     environment = {
       AWS_DEFAULT_REGION = var.aws_region
     }
+    on_failure  = "continue"
+    interpreter = ["bash", "-c"]
+  }
+  triggers = {
+    always_run = "${timestamp()}"
   }
 }
 
 locals {
-  create_domain = null_resource.check_domain.triggers["aws_apigateway_domain_name"] == "not found" ? 1 : 0
+  create_domain = "${null_resource.check_domain.provisioner[0].output}" == "not found" ? 1 : 0
 }
 
 # data "aws_api_gateway_domain_name" "existing_domain" {

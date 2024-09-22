@@ -1,8 +1,6 @@
 # common.tf or shared module
 locals {
-  combined_integrations = flatten([
-    var.integration_dependencies
-  ])
+  combined_integrations = var.integration_dependencies
 }
 
 resource "aws_api_gateway_deployment" "api_stage" {

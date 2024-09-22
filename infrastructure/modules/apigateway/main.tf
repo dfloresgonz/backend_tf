@@ -1,5 +1,8 @@
 resource "aws_api_gateway_rest_api" "my_api" {
   name = var.api_name
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
 }
 
 resource "aws_acm_certificate" "cert" {

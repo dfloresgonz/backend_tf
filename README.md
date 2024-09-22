@@ -13,15 +13,13 @@ terraform apply --auto-approve
 
 1. creacion bucket backend desde terraform
 
-3. codigo de lambdas en s3
+2. codigo de lambdas en s3
 
-4. Cloudformation stack
+3. Cloudformation stack
 
-5. Hostedzone / Apigateway
+4. Hostedzone / Apigateway
 
-6. Usar typescript
-
-7. Levantar en local
+5. Usar typescript
 
 ### Desventajas
 

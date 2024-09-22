@@ -27,11 +27,11 @@ resource "aws_route53_record" "cert_validation" {
     }
   }
 
-  name            = each.value.name
-  type            = each.value.type
-  zone_id         = data.aws_route53_zone.my_zone.zone_id
-  records         = [each.value.value] # Usa el valor de validación obtenido
-  ttl             = 300
+  name    = each.value.name
+  type    = each.value.type
+  zone_id = data.aws_route53_zone.my_zone.zone_id
+  records = [each.value.value] # Usa el valor de validación obtenido
+  # ttl             = 300
   allow_overwrite = true
   alias {
     evaluate_target_health = true

@@ -7,24 +7,17 @@ resource "aws_api_gateway_rest_api" "my_api" {
 
 resource "aws_acm_certificate" "cert" {
   domain_name       = "api.decepticons.dev"
-  validation_method = "DNS" # O puede ser "EMAIL", según tu preferencia
-
-  # Configurar los nombres alternativos si tienes subdominios
-  # subject_alternative_names = ["www.mydomain.com"]
-
-  # Las zonas de validación DNS deben configurarse si eliges la validación por DNS
+  validation_method = "DNS"
   lifecycle {
     create_before_destroy = true
   }
 }
 
-# Obtener la zona DNS de Route 53 para realizar la validación por DNS
 data "aws_route53_zone" "my_zone" {
   name         = "decepticons.dev."
   private_zone = false
 }
 
-# Validar el certificado por DNS (necesitarás agregar un registro CNAME en tu dominio)
 resource "aws_route53_record" "cert_validation" {
   for_each = {
     for dvo in aws_acm_certificate.cert.domain_validation_options : dvo.domain_name => {

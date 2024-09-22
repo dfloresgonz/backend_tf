@@ -40,7 +40,13 @@ resource "aws_acm_certificate_validation" "cert_validation" {
   validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
 }
 
+data "aws_api_gateway_domain_name" "existing_domain" {
+  domain_name = "api.decepticons.dev"
+}
+
 resource "aws_api_gateway_domain_name" "custom_domain" {
+  count = data.aws_api_gateway_domain_name.existing_domain.domain_name == "" ? 1 : 0
+
   domain_name              = "api.decepticons.dev"
   regional_certificate_arn = aws_acm_certificate.cert.arn
 
@@ -50,6 +56,8 @@ resource "aws_api_gateway_domain_name" "custom_domain" {
 }
 
 resource "aws_route53_record" "api_gateway_domain" {
+  count = data.aws_api_gateway_domain_name.existing_domain.domain_name == "" ? 1 : 0
+
   zone_id = data.aws_route53_zone.my_zone.zone_id
   name    = "api.decepticons.dev"
   type    = "CNAME"
@@ -66,7 +74,9 @@ output "root_resource_id" {
 }
 
 output "custom_domain_name" {
-  value = aws_api_gateway_domain_name.custom_domain.domain_name
+  # value = aws_api_gateway_domain_name.custom_domain.domain_name
+  value = aws_api_gateway_domain_name.custom_domain[0].domain_name
+  # condition = aws_api_gateway_domain_name.custom_domain.count > 0
 }
 
 # resource "aws_api_gateway_deployment" "api_stage" {

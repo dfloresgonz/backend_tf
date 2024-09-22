@@ -95,7 +95,7 @@ output "root_resource_id" {
 
 output "custom_domain_name" {
   # value = aws_api_gateway_domain_name.custom_domain.domain_name
-  value = local.create_domain == 1 ? aws_api_gateway_domain_name.custom_domain[0].domain_name : data.aws_api_gateway_domain_name.existing_domain.domain_name
+  value = local.create_domain == 1 ? aws_api_gateway_domain_name.custom_domain[0].domain_name : "api.decepticons.dev"
   # condition = aws_api_gateway_domain_name.custom_domain.count > 0
 }
 

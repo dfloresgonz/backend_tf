@@ -48,6 +48,18 @@ resource "aws_api_gateway_domain_name" "custom_domain" {
   certificate_arn = aws_acm_certificate.cert.arn
 }
 
+output "my_api_id" {
+  value = aws_api_gateway_rest_api.my_api.id
+}
+
+output "root_resource_id" {
+  value = aws_api_gateway_rest_api.my_api.root_resource_id
+}
+
+output "custom_domain_name" {
+  value = aws_api_gateway_domain_name.custom_domain.domain_name
+}
+
 # resource "aws_api_gateway_deployment" "api_stage" {
 #   rest_api_id = aws_api_gateway_rest_api.my_api.id
 #   stage_name  = "test"

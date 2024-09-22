@@ -44,8 +44,12 @@ data "aws_api_gateway_domain_name" "existing_domain" {
   domain_name = "api.decepticons.dev"
 }
 
+locals {
+  create_domain = data.aws_api_gateway_domain_name.existing_domain.domain_name == "" ? true : false
+}
+
 resource "aws_api_gateway_domain_name" "custom_domain" {
-  count = data.aws_api_gateway_domain_name.existing_domain.domain_name == "" ? 1 : 0
+  count = local.create_domain ? 1 : 0
 
   domain_name              = "api.decepticons.dev"
   regional_certificate_arn = aws_acm_certificate.cert.arn
@@ -56,7 +60,7 @@ resource "aws_api_gateway_domain_name" "custom_domain" {
 }
 
 resource "aws_route53_record" "api_gateway_domain" {
-  count = data.aws_api_gateway_domain_name.existing_domain.domain_name == "" ? 1 : 0
+  count = local.create_domain ? 1 : 0
 
   zone_id = data.aws_route53_zone.my_zone.zone_id
   name    = "api.decepticons.dev"
@@ -75,7 +79,7 @@ output "root_resource_id" {
 
 output "custom_domain_name" {
   # value = aws_api_gateway_domain_name.custom_domain.domain_name
-  value = aws_api_gateway_domain_name.custom_domain[0].domain_name
+  value = local.create_domain ? aws_api_gateway_domain_name.custom_domain[0].domain_name : data.aws_api_gateway_domain_name.existing_domain.domain_name
   # condition = aws_api_gateway_domain_name.custom_domain.count > 0
 }
 

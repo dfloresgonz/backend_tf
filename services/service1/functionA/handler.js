@@ -24,6 +24,6 @@ module.exports.main = async (event) => {
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ message: `holaa from function A! - ${_uuid} - name: ${name}`, data, env: ENV }),
+    body: JSON.stringify({ message: `holaa from function A! - ${_uuid} - name: ${name}`, data, env: ENVIROMENT }),
   };
 };

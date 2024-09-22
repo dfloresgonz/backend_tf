@@ -23,16 +23,24 @@ data "aws_route53_zone" "my_zone" {
 
 # Validar el certificado por DNS (necesitarás agregar un registro CNAME en tu dominio)
 resource "aws_route53_record" "cert_validation" {
-  name    = aws_acm_certificate.cert.domain_validation_options[0].resource_record_name
-  type    = aws_acm_certificate.cert.domain_validation_options[0].resource_record_type
-  zone_id = aws_route53_zone.my_zone.zone_id
-  records = [aws_acm_certificate.cert.domain_validation_options[0].resource_record_value]
+  for_each = {
+    for dvo in aws_acm_certificate.cert.domain_validation_options : dvo.domain_name => {
+      name  = dvo.resource_record_name
+      type  = dvo.resource_record_type
+      value = dvo.resource_record_value
+    }
+  }
+
+  name    = each.value.name
+  type    = each.value.type
+  zone_id = data.aws_route53_zone.my_zone.zone_id
+  records = [each.value.value] # Usa el valor de validación obtenido
   ttl     = 300
 }
 
 resource "aws_acm_certificate_validation" "cert_validation" {
   certificate_arn         = aws_acm_certificate.cert.arn
-  validation_record_fqdns = [aws_route53_record.cert_validation.fqdn]
+  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
 }
 
 resource "aws_api_gateway_domain_name" "custom_domain" {

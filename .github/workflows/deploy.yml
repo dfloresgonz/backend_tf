@@ -10,7 +10,7 @@ env:
   AWS_DEFAULT_REGION: ${{ vars.AWS_REGION }}
   USUARIO_BD: ${{ vars.USUARIO_BD }}
   HOST_BD: ${{ vars.USUARIO_BD }}
-  TF_STATE_BUCKET: prueba-state-buckeDt
+  TF_STATE_BUCKET: prueba-state-bucket
 
 jobs:
   deployar:

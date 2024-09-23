@@ -42,7 +42,13 @@ resource "aws_acm_certificate_validation" "cert_validation" {
 
 resource "null_resource" "check_domain" {
   provisioner "local-exec" {
-    command = "aws apigateway get-domain-name --domain-name api.decepticons.dev --region ${var.aws_region} || echo 'not found'"
+    command = <<EOT
+      if aws apigateway get-domain-name --domain-name api.decepticons.dev --region ${var.aws_region}; then
+        echo "exists" > ${path.module}/domain_check.txt
+      else
+        echo "not found" > ${path.module}/domain_check.txt
+      fi
+    EOT
     environment = {
       AWS_DEFAULT_REGION = var.aws_region
     }

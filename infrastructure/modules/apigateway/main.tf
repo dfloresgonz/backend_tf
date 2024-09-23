@@ -80,7 +80,7 @@ resource "aws_acm_certificate_validation" "cert_validation" {
 # }
 
 data "external" "check_domain" {
-  program = ["bash", "${path.module}/../../../scripts/check_domain.sh", "api.decepticons.dev"]
+  program = ["bash", "${path.module}/../../../.github/scripts/check_domain.sh", "api.decepticons.dev"]
 }
 
 # Esto devolverá `true` o `false`

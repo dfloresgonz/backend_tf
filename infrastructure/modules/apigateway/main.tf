@@ -40,33 +40,33 @@ resource "aws_acm_certificate_validation" "cert_validation" {
   validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
 }
 
-resource "null_resource" "check_domain" {
-  provisioner "local-exec" {
-    command = <<EOT
-      if aws apigateway get-domain-name --domain-name api.decepticons.dev --region ${var.aws_region}; then
-        echo "exists" > ${path.module}/domain_check.txt
-      else
-        echo "not found" > ${path.module}/domain_check.txt
-      fi
-    EOT
-    environment = {
-      AWS_DEFAULT_REGION = var.aws_region
-    }
-    on_failure  = "continue"
-    interpreter = ["bash", "-c"]
-  }
-  triggers = {
-    always_run = "${timestamp()}"
-  }
-}
+# resource "null_resource" "check_domain" {
+#   provisioner "local-exec" {
+#     command = <<EOT
+#       if aws apigateway get-domain-name --domain-name api.decepticons.dev --region ${var.aws_region}; then
+#         echo "exists" > ${path.module}/domain_check.txt
+#       else
+#         echo "not found" > ${path.module}/domain_check.txt
+#       fi
+#     EOT
+#     environment = {
+#       AWS_DEFAULT_REGION = var.aws_region
+#     }
+#     on_failure  = "continue"
+#     interpreter = ["bash", "-c"]
+#   }
+#   triggers = {
+#     always_run = "${timestamp()}"
+#   }
+# }
 
-data "local_file" "domain_check" {
-  filename = "${path.module}/domain_check.txt"
-}
+# data "local_file" "domain_check" {
+#   filename = "${path.module}/domain_check.txt"
+# }
 
-locals {
-  create_domain = trim(data.local_file.domain_check.content, "\n") == "not found" ? 1 : 0
-}
+# locals {
+#   create_domain = trim(data.local_file.domain_check.content, "\n") == "not found" ? 1 : 0
+# }
 
 # data "aws_api_gateway_domain_name" "existing_domain" {
 #   domain_name = "api.decepticons.dev"
@@ -79,8 +79,17 @@ locals {
 #   create_domain = local.domain_exists == "" ? 1 : 0
 # }
 
+data "external" "check_domain" {
+  program = ["bash", ".github/scripts/check_domain.sh", "api.decepticons.dev"]
+}
+
+# Esto devolverá `true` o `false`
+locals {
+  domain_exists = data.external.check_domain.result.exists
+}
+
 resource "aws_api_gateway_domain_name" "custom_domain" {
-  count = local.create_domain
+  count = local.domain_exists == "false" ? 1 : 0
 
   domain_name              = "api.decepticons.dev"
   regional_certificate_arn = aws_acm_certificate.cert.arn
@@ -91,7 +100,7 @@ resource "aws_api_gateway_domain_name" "custom_domain" {
 }
 
 resource "aws_route53_record" "api_gateway_domain" {
-  count = local.create_domain
+  count = local.domain_exists == "false" ? 1 : 0
 
   zone_id = data.aws_route53_zone.my_zone.zone_id
   name    = "api.decepticons.dev"
@@ -110,7 +119,7 @@ output "root_resource_id" {
 
 output "custom_domain_name" {
   # value = aws_api_gateway_domain_name.custom_domain.domain_name
-  value = local.create_domain == 1 ? aws_api_gateway_domain_name.custom_domain[0].domain_name : "api.decepticons.dev"
+  value = local.domain_exists == "false" ? aws_api_gateway_domain_name.custom_domain[0].domain_name : "api.decepticons.dev"
   # condition = aws_api_gateway_domain_name.custom_domain.count > 0
 }
 

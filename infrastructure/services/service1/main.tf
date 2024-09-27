@@ -60,6 +60,12 @@ locals {
       api_method = "GET"
     }
   }
+  function_dependencies = flatten([
+    for function_name in keys(local.function_configs) : [
+      "module.funciones[\"${function_name}\"].method",
+      "module.funciones[\"${function_name}\"].integration"
+    ]
+  ])
 }
 
 ############################ Functions
@@ -190,12 +196,7 @@ resource "aws_api_gateway_deployment" "api_deployment" {
   lifecycle {
     create_before_destroy = true
   }
-  depends_on = flatten([
-    for function_name in keys(local.function_configs) : [
-      module.funciones[function_name].method,
-      module.funciones[function_name].integration
-    ]
-  ])
+  depends_on = local.function_dependencies
   # depends_on = [
   #   module.functionA.method,
   #   module.functionA.integration,

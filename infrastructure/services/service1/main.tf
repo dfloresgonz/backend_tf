@@ -34,6 +34,7 @@ locals {
   variables = {
     ENVIROMENT = local.stage
     USUARIO_BD = var.USUARIO_BD
+    API_KEY    = var.API_KEY
   }
 }
 

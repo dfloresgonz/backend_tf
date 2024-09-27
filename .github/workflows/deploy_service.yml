@@ -11,6 +11,7 @@ env:
   USUARIO_BD: ${{ vars.USUARIO_BD }}
   DOMINIO: decepticons.dev
   RUNTIME: nodejs20.x
+  API_KEY: 1231231231231
   TF_STATE_BUCKET: prueba-state-bucket
 
 jobs:
@@ -125,6 +126,7 @@ jobs:
           echo "stage = \"${{ env.DEPLOYMENT_ENV }}\"" >> terraform.tfvars
           echo "api_name = \"${{ matrix.service }}\"" >> terraform.tfvars
           echo "USUARIO_BD = \"${{ env.USUARIO_BD }}\"" >> terraform.tfvars
+          echo "API_KEY = \"${{ env.API_KEY }}\"" >> terraform.tfvars
         working-directory: infrastructure/services/${{ matrix.service }}
 
       - name: Generate backend.conf file

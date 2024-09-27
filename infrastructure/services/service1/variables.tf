@@ -27,3 +27,8 @@ variable "USUARIO_BD" {
   description = "Usuario de la base de datos"
   type        = string
 }
+
+variable "API_KEY" {
+  description = "API Key for the API Gateway"
+  type        = string
+}

@@ -82,6 +82,8 @@ jobs:
           terraform_version: 1.9.5
 
       - name: Download service-specific artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
             mkdir -p deploy/${{ matrix.service }}
             

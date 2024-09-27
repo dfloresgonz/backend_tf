@@ -55,30 +55,11 @@ jobs:
       - name: Build ${{ matrix.service }} - ${{ matrix.function }}
         run: yarn workspace ${{ matrix.function }} run build && yarn workspace ${{ matrix.function }} run package
 
-      - name: Show pwd
-        run: |
-            pwd
-            ls -la
-      
-      - name: Show build artifacts
-        run: |
-            echo "Artifacts downloaded for service ${{ matrix.function }}:"
-            cd infrastructure/
-            ls
-      - name: Show build artifacts 2
-        run: |
-            cd infrastructure/services/
-            ls
-      - name: Show build artifacts 3
-        run: |
-            cd infrastructure/services/${{ matrix.service }}
-            ls
-
       - name: Upload ZIP as artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.service }}-${{ matrix.function }}-artifact
-          path: infrastructure/services/${{ matrix.service }}/${{ matrix.function }}/${{ matrix.function }}.zip
+          path: services/${{ matrix.service }}/${{ matrix.function }}/${{ matrix.function }}.zip
   deploy:
     needs: build
     runs-on: ubuntu-latest

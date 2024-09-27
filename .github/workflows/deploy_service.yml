@@ -92,6 +92,7 @@ jobs:
             rm -f deploy/*.zip
             
             for artifact in $(gh api -X GET /repos/${{ github.repository }}/actions/artifacts --jq ".artifacts[].name" | grep "${{ matrix.service }}-"); do
+              echo "Downloading: $artifact"
               gh run download --name "$artifact" --dir deploy
             done
         working-directory: infrastructure/services/${{ matrix.service }}

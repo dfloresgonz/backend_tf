@@ -26,9 +26,20 @@ terraform apply -var="dominio=decepticons.dev" -var="region=us-east-2" -var="api
 
 1. creacion bucket backend desde terraform (/resources/base)
 
-2. 
+2. deployar solo funciones
+
+3. deploy.yml service
 
 
 ### Desventajas
 
 1. Si se quiere deployar bastantes funciones por algun cambio global sera pesado para el actions.
+
+### git
+
+```bash
+git rm -r --cached . 
+git add .
+git commit -m ".gitignore is now working"
+git push
+```

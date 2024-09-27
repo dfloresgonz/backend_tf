@@ -1,12 +1,10 @@
-// 'use strict';
-// const uuid = require('uuid');
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 
 import { getName } from "./services/servicio";
 
 export const config = {
-  method: 'POST', // Define el método HTTP que esta función admite
+  method: 'POST',
 };
 
 export const main = async (event: any) => {

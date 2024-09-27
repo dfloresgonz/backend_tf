@@ -63,8 +63,8 @@ jobs:
       - name: Show build artifacts
         run: |
             echo "Artifacts downloaded for service ${{ matrix.function }}:"
-            cd infrastructure/services/${{ matrix.service }}/${{ matrix.function }}
-            ls -la
+            cd infrastructure/
+            ls
 
       - name: Upload ZIP as artifact
         uses: actions/upload-artifact@v3

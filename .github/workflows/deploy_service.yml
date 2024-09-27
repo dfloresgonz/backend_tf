@@ -145,7 +145,6 @@ jobs:
     needs: deploy
 
     steps:
-
       - name: Delete all artifacts
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

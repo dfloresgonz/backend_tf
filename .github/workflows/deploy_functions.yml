@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: ["service1-functionA"]
+        service: ["service1-functionA", "service1-functionB"]
     steps:
       - name: Split service and function name
         run: |

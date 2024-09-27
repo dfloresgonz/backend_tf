@@ -2,9 +2,10 @@
   "name": "backend_tf",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js"
+    "dev": "npx tsx watch index.ts"
   },
   "keywords": [],
   "author": "",
@@ -20,10 +21,15 @@
     ]
   },
   "devDependencies": {
+    "@types/node": "^22.7.3",
     "esbuild": "^0.23.1",
     "express": "^4.21.0",
     "glob": "^11.0.0",
-    "hcl-parser": "^0.1.1",
-    "nodemon": "^3.1.7"
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.0"
   }
 }

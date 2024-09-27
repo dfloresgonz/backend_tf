@@ -6,3 +6,6 @@
 .terraform.lock.hcl
 lambda.zip
 node_modules/
+*.conf
+handler.js
+index.js

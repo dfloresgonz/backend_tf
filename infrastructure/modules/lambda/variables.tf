@@ -1,4 +1,4 @@
-variable "aws_region" {
+variable "region" {
   description = "La región de AWS en la que se desplegarán los recursos"
   type        = string
 }
@@ -23,7 +23,7 @@ variable "variables" {
   type        = map(string)
 }
 
-# variable "environment" {
-#   description = "Variables de entorno para la función Lambda"
-#   type        = string
-# }
+variable "runtime" {
+  description = "Versión de Node.js para la función Lambda"
+  type        = string
+}

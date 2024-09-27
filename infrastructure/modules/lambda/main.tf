@@ -1,5 +1,5 @@
 provider "aws" {
-  region = var.aws_region
+  region = var.region
 }
 
 resource "random_id" "unique" {
@@ -10,16 +10,13 @@ resource "random_id" "unique" {
 resource "aws_lambda_function" "lambda_service" {
   function_name    = "${var.base_name}-${random_id.unique.hex}-function"
   handler          = var.handler_path
-  runtime          = "nodejs20.x"
+  runtime          = var.runtime # "nodejs20.x"
   filename         = var.filename
   role             = aws_iam_role.lambda_exec_role.arn
   source_code_hash = filebase64sha256("${var.filename}")
 
   environment {
     variables = var.variables
-    # variables = {
-    #   ENV = "${var.environment}"
-    # }
   }
 }
 

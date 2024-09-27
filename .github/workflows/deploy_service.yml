@@ -85,16 +85,18 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-            mkdir -p deploy/${{ matrix.service }}
+            mkdir -p deploy
             
             for artifact in $(gh api -X GET /repos/${{ github.repository }}/actions/artifacts --jq ".artifacts[].name" | grep "${{ matrix.service }}-"); do
-              gh run download --name "$artifact" --dir deploy/${{ matrix.service }}
+              gh run download --name "$artifact" --dir deploy
             done
+        working-directory: infrastructure/services/${{ matrix.service }}
   
       - name: List downloaded artifacts ${{ matrix.service }}
         run: |
             echo "Artifacts downloaded for service ${{ matrix.service }}:"
-            ls -la deploy/${{ matrix.service }}
+            ls -la deploy
+        working-directory: infrastructure/services/${{ matrix.service }}
       
       - name: Generate .tfvars file
         id: GenerateTfvars

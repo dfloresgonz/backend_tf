@@ -6,7 +6,7 @@ module "lambdaAPI" {
   source       = "../../modules/lambda"
   base_name    = "${var.api_name}-${var.function_name}"
   handler_path = "bundle.main"
-  filename     = "deploy/${var.api_name}/${var.function_name}.zip"
+  filename     = "deploy/${var.function_name}.zip"
   # filename     = "../../../services/${var.api_name}/${var.function_name}/lambda.zip"
   region    = var.region
   variables = var.variables

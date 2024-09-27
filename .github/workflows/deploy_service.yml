@@ -65,9 +65,13 @@ jobs:
             echo "Artifacts downloaded for service ${{ matrix.function }}:"
             cd infrastructure/
             ls
-            cd services/
+      - name: Show build artifacts 2
+        run: |
+            cd infrastructure/services/
             ls
-            cd ${{ matrix.service }}/
+      - name: Show build artifacts 3
+        run: |
+            cd infrastructure/services/${{ matrix.service }}
             ls
 
       - name: Upload ZIP as artifact

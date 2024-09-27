@@ -1,0 +1,85 @@
+name: Test Deployment
+on:
+  push:
+    branches:
+      - main
+env:
+  DEPLOYMENT_ENV: staging
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+  AWS_DEFAULT_REGION: ${{ vars.AWS_REGION }}
+  USUARIO_BD: ${{ vars.USUARIO_BD }}
+  DOMINIO: decepticons.dev
+  RUNTIME: nodejs20.x
+  TF_STATE_BUCKET: prueba-state-bucket
+
+jobs:
+  list-functions:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: ["service1"]
+    outputs:
+      funciones-output: ${{ steps.get-functions.outputs.funcs }}
+    steps:
+      - name: ~ Checkout code ~
+        id: CheckoutCode
+        uses: actions/checkout/@v4
+      
+      - name: Get functions
+        id: get-functions
+        run: |
+          functions=$(ls services/${{ matrix.service }})
+          funcs=$(echo "$functions" | jq -R -s -c 'split("\n")[:-1] | map({service: "${{ matrix.service }}", function: .})')
+          echo "Funciones:: $funcs"
+          echo "funcs=$funcs" >> $GITHUB_OUTPUT
+  deployar:
+    needs: list-functions
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include: ${{ fromJson(needs.list-functions.outputs.funciones-output) }}
+    steps:
+      - name: ~ Checkout code ~
+        id: CheckoutCode
+        uses: actions/checkout/@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build ${{ matrix.service }} - ${{ matrix.function }}
+        run: yarn workspace ${{ matrix.function }} run build && yarn workspace ${{ matrix.function }} run package
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.9.5
+      
+      - name: Generate .tfvars file
+        id: GenerateTfvars
+        run: |
+          echo "region = \"${{ env.AWS_DEFAULT_REGION }}\"" > terraform.tfvars
+          echo "dominio = \"${{ env.DOMINIO }}\"" >> terraform.tfvars
+          echo "runtime = \"${{ env.RUNTIME }}\"" >> terraform.tfvars
+          echo "stage = \"${{ env.DEPLOYMENT_ENV }}\"" >> terraform.tfvars
+          echo "USUARIO_BD = \"${{ env.USUARIO_BD }}\"" >> terraform.tfvars
+        working-directory: infrastructure/services/${{ matrix.service }}/${{ matrix.function }}
+
+      - name: Generate backend.conf file
+        id: GenerateBackendConf
+        run: |
+          echo "bucket = \"${{ env.TF_STATE_BUCKET }}\"" > backend.conf
+          echo "key = \"${{ matrix.service }}.${{ matrix.function }}.terraform.tfstate\"" >> backend.conf
+          echo "region = \"${{ env.AWS_DEFAULT_REGION }}\"" >> backend.conf
+        working-directory: infrastructure/services/${{ matrix.service }}/${{ matrix.function }}
+      
+      - name: Deploy ${{ matrix.service }} - ${{ matrix.function }}
+        run: |
+          terraform init -backend-config=backend.conf
+          terraform apply -var-file="terraform.tfvars" -auto-approve -input=false
+        working-directory: infrastructure/services/${{ matrix.service }}/${{ matrix.function }}

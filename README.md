@@ -26,11 +26,11 @@ terraform apply -var="dominio=decepticons.dev" -var="region=us-east-2" -var="api
 
 1. creacion bucket backend desde terraform (/resources/base)
 
-2. deployar solo funciones
+2. deployar solo funciones (si solo hay cambio en el zip)
 
-3. deploy.yml service
+3. deploy.yml service (hacer el yarn build y package de todas las funciones del service)
 
-4. correr en localstack
+4. correr en localstack (base y servicios)
 
 5. redeployar aws_api_gateway_stage
 

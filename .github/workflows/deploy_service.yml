@@ -81,6 +81,12 @@ jobs:
         with:
           terraform_version: 1.9.5
 
+      - name: List downloaded artifacts before ${{ matrix.service }}
+        run: |
+            echo "Artifacts downloaded for service ${{ matrix.service }}:"
+            ls -la
+        working-directory: infrastructure/services/${{ matrix.service }}
+
       - name: Download service-specific artifacts
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

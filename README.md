@@ -30,6 +30,10 @@ terraform apply -var="dominio=decepticons.dev" -var="region=us-east-2" -var="api
 
 3. deploy.yml service
 
+4. correr en localstack
+
+5. redeployar aws_api_gateway_stage
+
 
 ### Desventajas
 

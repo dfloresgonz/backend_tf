@@ -46,14 +46,15 @@ jobs:
       - name: Download tfstate
         run: |
           aws s3 cp s3://${{ env.TF_STATE_BUCKET }}/${{ env.SERVICE }}.terraform.tfstate .
-        working-directory: infrastructure/services/${{ env.SERVICE }}/${{ env.FUNCION }}
+        working-directory: services/${{ env.SERVICE }}/${{ env.FUNCION }}
 
       - name: Get function name
         run: |
           FUNCTION_TF_NAME=$(jq -r '.resources[] | select(.type == "aws_lambda_function") | .instances[].attributes.function_name' ${{ env.SERVICE }}.terraform.tfstate | grep "${{ env.FUNCION }}")
           echo "FUNCTION_TF_NAME=$FUNCTION_TF_NAME" >> $GITHUB_ENV
+        working-directory: services/${{ env.SERVICE }}/${{ env.FUNCION }}
 
       - name: Update lambda code zip
         run : |
             aws lambda update-function-code --function-name ${{ env.FUNCTION_TF_NAME }} --zip-file fileb://${{ env.FUNCION }}.zip
-        working-directory: infrastructure/services/${{ env.SERVICE }}/${{ env.FUNCION }}
+        working-directory: services/${{ env.SERVICE }}/${{ env.FUNCION }}

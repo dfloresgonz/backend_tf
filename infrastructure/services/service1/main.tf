@@ -59,6 +59,9 @@ locals {
     functionG = {
       api_method = "GET"
     }
+    functionH = {
+      api_method = "GET"
+    }
   }
 }
 
@@ -112,7 +115,9 @@ resource "aws_api_gateway_deployment" "api_deployment" {
     module.funciones["functionF"].method,
     module.funciones["functionF"].integration,
     module.funciones["functionG"].method,
-    module.funciones["functionG"].integration
+    module.funciones["functionG"].integration,
+    module.funciones["functionH"].method,
+    module.funciones["functionH"].integration
   ]
 }
 

@@ -26,11 +26,9 @@ terraform apply -var="dominio=decepticons.dev" -var="region=us-east-2" -var="api
 
 1. creacion bucket backend desde terraform (/resources/base)
 
-2. deployar solo funciones (si solo hay cambio en el zip)
+2. correr en localstack (base y servicios)
 
-4. correr en localstack (base y servicios)
-
-5. redeployar aws_api_gateway_stage
+3. redeployar aws_api_gateway_stage
 
 
 ### Desventajas

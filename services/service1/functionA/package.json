@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc && esbuild handler.js --bundle --minify --platform=node --target=node18 --outfile=dist/bundle.js --sourcemap",
-    "package": "zip -j lambda.zip dist/bundle.js dist/bundle.js.map"
+    "package": "zip -j $(jq -r .name package.json).zip dist/bundle.js dist/bundle.js.map"
   },
   "dependencies": {
     "axios": "^1.7.7",

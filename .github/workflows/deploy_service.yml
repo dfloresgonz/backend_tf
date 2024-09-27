@@ -96,10 +96,16 @@ jobs:
             mkdir -p deploy
 
             rm -f deploy/*.zip
+            declare -A downloaded_artifacts
             
             for artifact in $(gh api -X GET /repos/${{ github.repository }}/actions/artifacts --jq ".artifacts[].name" | grep "${{ matrix.service }}-"); do
-              echo "Downloading: $artifact"
-              gh run download --name "$artifact" --dir deploy
+              if [[ -z "${downloaded_artifacts[$artifact]}" ]]; then
+                echo "Downloading $artifact..."
+                gh run download --name "$artifact" --dir deploy
+                downloaded_artifacts[$artifact]=1  # Marcamos como descargado
+              else
+                echo "$artifact already downloaded, skipping."
+              fi
             done
         working-directory: infrastructure/services/${{ matrix.service }}
   

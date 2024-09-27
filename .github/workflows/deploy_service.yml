@@ -86,6 +86,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
             mkdir -p deploy
+
+            rm -f deploy/*.zip
             
             for artifact in $(gh api -X GET /repos/${{ github.repository }}/actions/artifacts --jq ".artifacts[].name" | grep "${{ matrix.service }}-"); do
               gh run download --name "$artifact" --dir deploy

@@ -58,6 +58,8 @@ jobs:
       - name: Show pwd
         run: |
             pwd
+            ls -la
+      
       - name: Show build artifacts
         run: |
             echo "Artifacts downloaded for service ${{ matrix.function }}:"
@@ -110,6 +112,7 @@ jobs:
           echo "dominio = \"${{ env.DOMINIO }}\"" >> terraform.tfvars
           echo "runtime = \"${{ env.RUNTIME }}\"" >> terraform.tfvars
           echo "stage = \"${{ env.DEPLOYMENT_ENV }}\"" >> terraform.tfvars
+          echo "api_name = \"${{ matrix.service }}\"" >> terraform.tfvars
           echo "USUARIO_BD = \"${{ env.USUARIO_BD }}\"" >> terraform.tfvars
         working-directory: infrastructure/services/${{ matrix.service }}
 

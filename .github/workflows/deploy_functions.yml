@@ -1,0 +1,59 @@
+name: Function Deployment
+on:
+  push:
+    branches:
+      - main
+env:
+  DEPLOYMENT_ENV: staging
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+  AWS_DEFAULT_REGION: ${{ vars.AWS_REGION }}
+  # USUARIO_BD: ${{ vars.USUARIO_BD }}
+  # DOMINIO: decepticons.dev
+  # RUNTIME: nodejs20.x
+  # API_KEY: 1231231231231
+  TF_STATE_BUCKET: prueba-state-bucket
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: ["service1-functionA"]
+    steps:
+      - name: Split service and function name
+        run: |
+            service=$(echo "${{ matrix.service }}" | cut -d'-' -f1)
+            function=$(echo "${{ matrix.service }}" | cut -d'-' -f2)
+            echo "SERVICE=$service" >> $GITHUB_ENV
+            echo "FUNCION=$function" >> $GITHUB_ENV
+
+      - name: ~ Checkout code ~
+        id: CheckoutCode
+        uses: actions/checkout/@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build ${{ env.SERVICE }} - ${{ env.FUNCION }}
+        run: yarn workspace ${{ env.FUNCION }} run build && yarn workspace ${{ env.FUNCION }} run package
+
+      - name: Download tfstate
+        run: |
+          aws s3 cp s3://${{ env.TF_STATE_BUCKET }}/${{ env.SERVICE }}.terraform.tfstate .
+        working-directory: infrastructure/services/${{ env.SERVICE }}/${{ env.FUNCION }}
+
+      - name: Get function name
+        run: |
+          FUNCTION_TF_NAME=$(jq -r '.resources[] | select(.type == "aws_lambda_function") | .instances[].attributes.function_name' ${{ env.SERVICE }}.terraform.tfstate | grep "${{ env.FUNCION }}")
+          echo "FUNCTION_TF_NAME=$FUNCTION_TF_NAME" >> $GITHUB_ENV
+
+      - name: Update lambda code zip
+        run : |
+            aws lambda update-function-code --function-name ${{ env.FUNCTION_TF_NAME }} --zip-file fileb://${{ env.FUNCION }}.zip
+        working-directory: infrastructure/services/${{ env.SERVICE }}/${{ env.FUNCION }}

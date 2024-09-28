@@ -83,33 +83,33 @@ jobs:
         with:
           terraform_version: 1.9.5
 
-      - name: List downloaded artifacts before ${{ matrix.service }}
-        run: |
-            echo "Artifacts downloaded for service ${{ matrix.service }}:"
-            ls -la
-        working-directory: infrastructure/services/${{ matrix.service }}
-
       - name: Download service-specific artifacts
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-            rm -rf deploy/*
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ matrix.service }}-*
+          path: infrastructure/services/${{ matrix.service }}/deploy
 
-            mkdir -p deploy
+      # - name: Download service-specific artifacts
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #       rm -rf deploy/*
 
-            rm -f deploy/*.zip
-            declare -A downloaded_artifacts
+      #       mkdir -p deploy
+
+      #       rm -f deploy/*.zip
+      #       declare -A downloaded_artifacts
             
-            for artifact in $(gh api -X GET /repos/${{ github.repository }}/actions/artifacts --jq ".artifacts[].name" | grep "${{ matrix.service }}-"); do
-              if [[ -z "${downloaded_artifacts[$artifact]}" ]]; then
-                echo "Downloading $artifact..."
-                gh run download --name "$artifact" --dir deploy
-                downloaded_artifacts[$artifact]=1  # Marcamos como descargado
-              else
-                echo "$artifact already downloaded, skipping."
-              fi
-            done
-        working-directory: infrastructure/services/${{ matrix.service }}
+      #       for artifact in $(gh api -X GET /repos/${{ github.repository }}/actions/artifacts --jq ".artifacts[].name" | grep "${{ matrix.service }}-"); do
+      #         if [[ -z "${downloaded_artifacts[$artifact]}" ]]; then
+      #           echo "Downloading $artifact..."
+      #           gh run download --name "$artifact" --dir deploy
+      #           downloaded_artifacts[$artifact]=1  # Marcamos como descargado
+      #         else
+      #           echo "$artifact already downloaded, skipping."
+      #         fi
+      #       done
+      #   working-directory: infrastructure/services/${{ matrix.service }}
   
       - name: List downloaded artifacts ${{ matrix.service }}
         run: |

@@ -84,32 +84,28 @@ jobs:
           terraform_version: 1.9.5
 
       - name: Download service-specific artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ matrix.service }}-*
-          path: infrastructure/services/${{ matrix.service }}/deploy
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+            run_id=$(gh run view --json databaseId -q '.databaseId')
+            echo "Run ID: $run_id"
+            rm -rf deploy/*
 
-      # - name: Download service-specific artifacts
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #       rm -rf deploy/*
+            mkdir -p deploy
 
-      #       mkdir -p deploy
-
-      #       rm -f deploy/*.zip
-      #       declare -A downloaded_artifacts
+            rm -f deploy/*.zip
+            declare -A downloaded_artifacts
             
-      #       for artifact in $(gh api -X GET /repos/${{ github.repository }}/actions/artifacts --jq ".artifacts[].name" | grep "${{ matrix.service }}-"); do
-      #         if [[ -z "${downloaded_artifacts[$artifact]}" ]]; then
-      #           echo "Downloading $artifact..."
-      #           gh run download --name "$artifact" --dir deploy
-      #           downloaded_artifacts[$artifact]=1  # Marcamos como descargado
-      #         else
-      #           echo "$artifact already downloaded, skipping."
-      #         fi
-      #       done
-      #   working-directory: infrastructure/services/${{ matrix.service }}
+            for artifact in $(gh api -X GET /repos/${{ github.repository }}/actions/runs/$run_id/artifacts --jq ".artifacts[].name" | grep "${{ matrix.service }}-"); do
+              if [[ -z "${downloaded_artifacts[$artifact]}" ]]; then
+                echo "Downloading $artifact..."
+                gh run download --name "$artifact" --dir deploy
+                downloaded_artifacts[$artifact]=1  # Marcamos como descargado
+              else
+                echo "$artifact already downloaded, skipping."
+              fi
+            done
+        working-directory: infrastructure/services/${{ matrix.service }}
   
       - name: List downloaded artifacts ${{ matrix.service }}
         run: |

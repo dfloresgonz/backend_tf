@@ -87,8 +87,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-            run_id="${{ github.run_id }}"
-            echo "Run ID: $run_id"
             rm -rf deploy/*
 
             mkdir -p deploy
@@ -96,7 +94,7 @@ jobs:
             rm -f deploy/*.zip
             declare -A downloaded_artifacts
             
-            for artifact in $(gh api -X GET /repos/${{ github.repository }}/actions/runs/$run_id/artifacts --jq ".artifacts[].name" | grep "${{ matrix.service }}-"); do
+            for artifact in $(gh api -X GET /repos/${{ github.repository }}/actions/artifacts --jq ".artifacts[].name" | grep "${{ matrix.service }}-"); do
               if [[ -z "${downloaded_artifacts[$artifact]}" ]]; then
                 echo "Downloading $artifact..."
                 gh run download --name "$artifact" --dir deploy

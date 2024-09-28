@@ -9,3 +9,4 @@ node_modules/
 *.conf
 handler.js
 index.js
+volume/

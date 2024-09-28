@@ -106,11 +106,11 @@ jobs:
             done
         working-directory: infrastructure/services/${{ matrix.service }}
   
-      - name: List downloaded artifacts ${{ matrix.service }}
-        run: |
-            echo "Artifacts downloaded for service ${{ matrix.service }}:"
-            ls -la deploy
-        working-directory: infrastructure/services/${{ matrix.service }}
+      # - name: List downloaded artifacts ${{ matrix.service }}
+      #   run: |
+      #       echo "Artifacts downloaded for service ${{ matrix.service }}:"
+      #       ls -la deploy
+      #   working-directory: infrastructure/services/${{ matrix.service }}
       
       - name: Generate .tfvars file
         id: GenerateTfvars

@@ -78,3 +78,13 @@ resource "aws_route53_record" "api_gateway_domain" {
     evaluate_target_health = false
   }
 }
+
+# Define the S3 bucket resource
+resource "aws_s3_bucket" "tfstate" {
+  bucket = var.tfstate_bucket
+
+  tags = {
+    Name        = "Terraform State Bucket"
+    Environment = var.stage
+  }
+}

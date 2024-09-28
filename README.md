@@ -24,11 +24,7 @@ terraform apply -var="dominio=decepticons.dev" -var="region=us-east-2" -var="api
 
 ### Pendientes
 
-1. creacion bucket backend desde terraform (/resources/base)
-
-2. correr en localstack (base y servicios)
-
-3. redeployar aws_api_gateway_stage
+1. correr en localstack (base y servicios)
 
 
 ### Desventajas

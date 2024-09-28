@@ -57,11 +57,12 @@ jobs:
         run: yarn workspace ${{ matrix.function }} run build && yarn workspace ${{ matrix.function }} run package
 
       - name: Upload ZIP as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.service }}-${{ matrix.function }}-artifact
           path: services/${{ matrix.service }}/${{ matrix.function }}/${{ matrix.function }}.zip
           retention-days: 1
+          overwrite: true
   deploy:
     needs: build
     runs-on: ubuntu-latest

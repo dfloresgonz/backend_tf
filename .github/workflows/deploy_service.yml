@@ -87,7 +87,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-            run_id=$(gh run view --json databaseId -q '.databaseId')
+            run_id="${{ github.run_id }}"
             echo "Run ID: $run_id"
             rm -rf deploy/*
 

@@ -105,12 +105,6 @@ jobs:
               fi
             done
         working-directory: infrastructure/services/${{ matrix.service }}
-  
-      # - name: List downloaded artifacts ${{ matrix.service }}
-      #   run: |
-      #       echo "Artifacts downloaded for service ${{ matrix.service }}:"
-      #       ls -la deploy
-      #   working-directory: infrastructure/services/${{ matrix.service }}
       
       - name: Generate .tfvars file
         id: GenerateTfvars
@@ -130,6 +124,14 @@ jobs:
           echo "bucket = \"${{ env.TF_STATE_BUCKET }}\"" > backend.conf
           echo "key = \"${{ matrix.service }}.terraform.tfstate\"" >> backend.conf
           echo "region = \"${{ env.AWS_DEFAULT_REGION }}\"" >> backend.conf
+        working-directory: infrastructure/services/${{ matrix.service }}
+
+      - name: Create main.tf file
+        id: CreateMainTf
+        run: |
+          cp main-remote.tf main.tf
+          mv main-local.tf main-local.txt
+          mv main-remote.tf main-remote.txt
         working-directory: infrastructure/services/${{ matrix.service }}
       
       - name: Deploy ${{ matrix.service }}

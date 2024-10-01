@@ -10,7 +10,7 @@ terraform {
 
   required_version = ">= 1.2.0"
 }
-# Especificar el proveedor
+
 provider "aws" {
   region = var.region
 }

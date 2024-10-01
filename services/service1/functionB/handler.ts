@@ -11,6 +11,6 @@ export const main = async (event: any) => {
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ message: `holaa from function B!`, env: ENVIROMENT, test:123123 }),
+    body: JSON.stringify({ message: `holaa from function B!`, env: ENVIROMENT, test:0, new: true }),
   };
 };

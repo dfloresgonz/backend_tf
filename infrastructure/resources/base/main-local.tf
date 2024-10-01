@@ -1,18 +1,31 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.26"
-    }
-  }
-
-  backend "s3" {}
-
-  required_version = ">= 1.2.0"
-}
-# Especificar el proveedor
 provider "aws" {
   region = var.region
+  endpoints {
+    apigateway     = "http://localhost:4566"
+    apigatewayv2   = "http://localhost:4566"
+    cloudformation = "http://localhost:4566"
+    cloudwatch     = "http://localhost:4566"
+    dynamodb       = "http://localhost:4566"
+    ec2            = "http://localhost:4566"
+    es             = "http://localhost:4566"
+    elasticache    = "http://localhost:4566"
+    firehose       = "http://localhost:4566"
+    iam            = "http://localhost:4566"
+    kinesis        = "http://localhost:4566"
+    lambda         = "http://localhost:4566"
+    rds            = "http://localhost:4566"
+    redshift       = "http://localhost:4566"
+    route53        = "http://localhost:4566"
+    s3             = "http://s3.localhost.localstack.cloud:4566"
+    secretsmanager = "http://localhost:4566"
+    ses            = "http://localhost:4566"
+    sns            = "http://localhost:4566"
+    sqs            = "http://localhost:4566"
+    ssm            = "http://localhost:4566"
+    stepfunctions  = "http://localhost:4566"
+    sts            = "http://localhost:4566"
+    acm            = "http://localhost:4566"
+  }
 }
 
 locals {
@@ -20,9 +33,8 @@ locals {
 }
 
 ############################ Hosted zone
-data "aws_route53_zone" "my_zone" {
-  name         = "${var.dominio}."
-  private_zone = false
+resource "aws_route53_zone" "my_zone" {
+  name = var.dominio
 }
 
 ############################ Certificado
@@ -45,7 +57,7 @@ resource "aws_route53_record" "cert_validation" {
 
   name            = each.value.name
   type            = each.value.type
-  zone_id         = data.aws_route53_zone.my_zone.zone_id
+  zone_id         = aws_route53_zone.my_zone.zone_id
   records         = [each.value.value]
   ttl             = 300
   allow_overwrite = true
@@ -68,7 +80,7 @@ resource "aws_api_gateway_domain_name" "custom_domain" {
 
 ############################ api record
 resource "aws_route53_record" "api_gateway_domain" {
-  zone_id = data.aws_route53_zone.my_zone.zone_id
+  zone_id = aws_route53_zone.my_zone.zone_id
   name    = local.api_domain
   type    = "A"
 

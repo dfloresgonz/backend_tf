@@ -10,3 +10,4 @@ node_modules/
 handler.js
 index.js
 volume/
+deploy/

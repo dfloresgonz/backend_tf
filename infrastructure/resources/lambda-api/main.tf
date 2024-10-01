@@ -42,3 +42,8 @@ resource "aws_lambda_permission" "api_gateway_function" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "arn:aws:execute-api:${var.region}:${var.account_id}:${var.api_service_id}/*/*"
 }
+
+data "aws_caller_identity" "current" {}
+output "is_localstack" {
+  value = data.aws_caller_identity.current.id == "000000000000"
+}

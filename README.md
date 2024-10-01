@@ -9,6 +9,8 @@
 
 4. Localstack
 
+5. nodejs 20 (nvm)
+
 ---
 
 ```bash
@@ -73,3 +75,5 @@ docker-compose up -d
 1. correr en localstack todos los servicios
   - build todos servicios
   - deploy todos servicios
+
+2. deploy.service.sh read env from terraform.tfvars local

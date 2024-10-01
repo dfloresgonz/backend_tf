@@ -1,29 +1,52 @@
-import { v4 as uuidv4 } from 'uuid';
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 
-import { getName } from "./services/servicio";
+import { HmacSHA256, enc } from 'crypto-js';
 
 export const config = {
   method: 'POST',
 };
 
+type Params = {
+  deposit_id: number;
+}
+
+const HOST_TUPAY = 'https://api-stg.tupayonline.com';
+const ENDPOINT = '/v3/deposits/';
+
 export const main = async (event: any) => {
-  const _uuid = uuidv4();
-  const name = getName();
-  console.log(`Resultado del name: ${name}`);
-  console.log(`Request ID: ${_uuid}`);
+  const body: Params = JSON.parse(event.body);
+  console.log('body', body);
+  console.log(`Event: ${JSON.stringify(body)}`);
 
-  const response = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
-  const data = response.data;
-  console.log(`Response from external API: ${JSON.stringify(data)}`);
+  const API_KEY = process.env.TUPAY_API_KEY;
+  const API_SIGNATURE = process.env.TUPAY_API_SIG!;
 
-  const ENVIRONMENT = process.env.ENVIRONMENT;
-  const USUARIO_BD = process.env.USUARIO_BD;
-  console.log(`ENVIRONMENT: ${ENVIRONMENT}`);
-  console.log(`USUARIO_BD: ${USUARIO_BD}`);
+  const D24_AUTHORIZATION_SCHEME = "D24 ";
+
+  const xDate = new Date().toISOString().split('.')[0] + 'Z';
+
+  const content = ``;
+
+  const concatenatedString = `${xDate}${API_KEY}${content}`;
+
+  const hash = HmacSHA256(concatenatedString, API_SIGNATURE).toString(enc.Hex);
+
+  const signature = `${D24_AUTHORIZATION_SCHEME}${hash}`;
+
+  const axiosConfig: AxiosRequestConfig = {
+    headers: {
+      'X-Date': xDate,
+      'Authorization': signature,
+      'X-Login': API_KEY,
+    }
+  };
+
+  const response = await axios.get(`${HOST_TUPAY}${ENDPOINT}${body.deposit_id}`, axiosConfig);
+  const deposit = response.data;
+  console.log('deposit', deposit);
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ message: `holaa from function Aaaaaaaa....!`, env: ENVIRONMENT, foo: 'xxx' }),
+    body: JSON.stringify({ message: `holaa from function A.`, deposit }),
   };
 };

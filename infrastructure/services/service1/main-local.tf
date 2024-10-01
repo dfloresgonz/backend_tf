@@ -47,12 +47,15 @@ locals {
   variables = {
     ENVIROMENT = local.stage
     USUARIO_BD = var.USUARIO_BD
-    API_KEY    = var.API_KEY
   }
 
   function_configs = {
     functionA = {
-      api_method = "POST"
+      api_method = "POST",
+      variables = {
+        TUPAY_API_KEY = var.TUPAY_API_KEY
+        TUPAY_API_SIG = var.TUPAY_API_SIG
+      }
     }
     functionB = {
       api_method = "GET"
@@ -94,11 +97,7 @@ module "funciones" {
   account_id       = data.aws_caller_identity.current.account_id
   root_resource_id = aws_api_gateway_rest_api.API_service1.root_resource_id
   region           = var.region
-  variables        = local.variables
-  # variables        = merge(local.variables, {
-  #   NEW_VARIABLE1 = "value1"
-  #   NEW_VARIABLE2 = "value2"
-  # })
+  variables        = merge(local.variables, lookup(each.value, "variables", {}))
 }
 
 ############################

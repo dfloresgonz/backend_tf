@@ -28,7 +28,12 @@ variable "USUARIO_BD" {
   type        = string
 }
 
-variable "API_KEY" {
-  description = "API Key for the API Gateway"
+variable "TUPAY_API_KEY" {
+  description = "API Key for the Tupay API"
+  type        = string
+}
+
+variable "TUPAY_API_SIG" {
+  description = "API Key signature for the Tupay API"
   type        = string
 }

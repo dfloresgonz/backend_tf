@@ -1,9 +1,12 @@
 export const config = {
-  method: 'GET', // Define el método HTTP que esta función admite
+  method: 'POST',
 };
 
 export const main = async (event: any) => {
-  console.log('init...')
+  console.log('init...');
+  console.log('event1:', event);
+  console.log('event2:', JSON.stringify(event));
+
   const ENVIROMENT = process.env.ENVIROMENT;
   // const region = process.env.AWS_REGION;
   const USUARIO_BD = process.env.USUARIO_BD;
